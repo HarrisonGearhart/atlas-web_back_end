@@ -2,8 +2,8 @@ import ClassRoom from './0-classroom';
 
 export default function initializeRooms() {
   return [
-    ClassRoom(19),
-    ClassRoom(20),
-    ClassRoom(34),
+    new ClassRoom(19),
+    new ClassRoom(20),
+    new ClassRoom(34),
   ];
 }
