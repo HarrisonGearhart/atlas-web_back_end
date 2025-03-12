@@ -4,4 +4,6 @@ export default function getStudentsByLocation(students, city) {
     // filter function
     return students.filter((person) => person.location === city);
   }
+  //linter expects a return value at the end of the function
+  return [];
 }
