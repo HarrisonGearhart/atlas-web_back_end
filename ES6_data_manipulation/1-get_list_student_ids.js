@@ -3,7 +3,7 @@ export default function getListStudentIds(objects) {
   if (!Array.isArray(objects)) {
     return [];
   }
-  
+
   // returns an array of ids from a list of object
   return objects.map((student) => student.id);
 }
