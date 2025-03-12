@@ -3,8 +3,9 @@ export default class Car {
     // attributes
     this._brand = brand;
     this._motor = motor;
-    this._color = color; 
+    this._color = color;
   }
+
   // cloneCar method
   cloneCar() {
     return new this.constructor();
