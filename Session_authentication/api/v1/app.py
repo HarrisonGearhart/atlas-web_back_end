@@ -1,0 +1,94 @@
+#!/usr/bin/env python3
+"""
+Route module for the API
+"""
+from os import getenv
+from api.v1.views import app_views
+from flask import Flask, jsonify, abort, request
+from flask_cors import (CORS, cross_origin)
+import os
+from api.v1.auth.auth import Auth
+from api.v1.auth.session_auth import SessionAuth
+
+app = Flask(__name__)
+app.register_blueprint(app_views)
+CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
+
+# variable auth is None
+auth = None
+# if AUTH_TYPE is basic_auth
+# then import session_auth
+if getenv("AUTH_TYPE") == "basic_auth":
+    from api.v1.auth.basic_auth import BasicAuth
+    auth = BasicAuth()
+# else if AUTH_TYPE is auth
+# then local variable auth = Auth()
+elif getenv("AUTH_TYPE") == "session_auth":
+    from api.v1.auth.auth import Auth
+    auth = SessionAuth()
+
+
+# before request performs actions each time a request is made
+@app.before_request
+def before_request_func():
+    """
+    run before every request
+    """
+    if auth is None:
+        return
+
+    # list of paths
+    path_list = [
+        '/api/v1/status/',
+        '/api/v1/unauthorized/',
+        '/api/v1/forbidden/',
+        '/api/v1/auth_session/login/'
+    ]
+
+    # auth require_auth of request.path and path_list
+    if not auth.require_auth(request.path, path_list):
+        return
+
+    if (auth.authorization_header(request) is None and
+            auth.session_cookie(request) is None):
+        abort(401)
+
+    # check for valid user
+    user = auth.current_user(request)
+    if user is None:
+        abort(403)
+    # now current user is valid
+    request.current_user = user
+
+
+@app.errorhandler(404)
+def not_found(error) -> str:
+    """ Not found handler
+    """
+    return jsonify({"error": "Not found"}), 404
+
+
+# 401 error
+@app.errorhandler(401)
+def error_unauthorized(error):
+    """
+    handler for 401 error
+    """
+    # jasonify the error messsage
+    return jsonify({"error": "Unauthorized"}), 401
+
+
+# 403 error
+@app.errorhandler(403)
+def error_forbidden(error):
+    """
+    handler for 403 error
+    """
+    # jasonify the error messsage
+    return jsonify({"error": "Forbidden"}), 403
+
+
+if __name__ == "__main__":
+    host = getenv("API_HOST", "0.0.0.0")
+    port = getenv("API_PORT", "5005")
+    app.run(host=host, port=port)
