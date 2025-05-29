@@ -43,8 +43,6 @@ class Auth:
 
     def current_user(self, request=None) -> TypeVar('User'):
         """
-        I honestly don't know why this is here if never used
-        or properly implemented
-        :param request: the Flask request object
+        current user
         """
-        return None  # Todo, I guess
+        return None  # None
