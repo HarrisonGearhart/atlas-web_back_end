@@ -50,4 +50,3 @@ class MRUCache(BaseCaching):
         # append list with new key
         self.used.append(key)
         return (self.cache_data.get(key))
-        
