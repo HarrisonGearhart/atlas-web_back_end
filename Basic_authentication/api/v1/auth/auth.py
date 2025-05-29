@@ -48,4 +48,3 @@ class Auth:
         :param request: the Flask request object
         """
         return None  # Todo, I guess
-
