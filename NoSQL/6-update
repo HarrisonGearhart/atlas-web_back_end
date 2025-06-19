@@ -1,0 +1,8 @@
+// adds a new attribute to a document in the collection school
+// updateMany to update everydocument
+// multi is less common now?
+db.school.update(
+    { name: "Holberton school" },
+    { $set: { address: "972 Mission street" } },
+	{ multi: true }
+)
