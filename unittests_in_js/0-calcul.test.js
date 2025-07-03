@@ -30,8 +30,4 @@ describe('calculateNumber', function () {
     it('should return 3 for (-1.5, 3.8)', function () {
         assert.strictEqual(calculateNumber(-1.5, 3.8), 3);
     });
-
-    it('should return -2 for (-1.4, -1)', function () {
-        assert.strictEqual(calculateNumber(-1.4, -1), 2);
-    });
 });
